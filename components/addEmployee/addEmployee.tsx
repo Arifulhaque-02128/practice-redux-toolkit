@@ -1,18 +1,31 @@
 'use client'
-import { addEmployee } from '@/lib/features/handlingEmployee';
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { addEmployee, setEmployees } from '@/lib/features/handlingEmployee';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function AddEmployee () {
   
   const [employeeName, setEmployeeName] = useState('');
 
   const dispatch = useDispatch();
+  const employees = useSelector((state : any) => state.employeeData.employees);
 
   const dispatchEmployee = () => {
     dispatch(addEmployee(employeeName));
     setEmployeeName('');
-  }
+  };
+
+  useEffect(() => {
+    const savedEmployees = localStorage.getItem("employee");
+    if(savedEmployees) {
+      dispatch(setEmployees(JSON.parse(savedEmployees)));
+    }
+
+  }, [dispatch]);
+
+  useEffect(() => {
+    localStorage.setItem("employee", JSON.stringify(employees));
+  }, [employees]);
 
 
   return (

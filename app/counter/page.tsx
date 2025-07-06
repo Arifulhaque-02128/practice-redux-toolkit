@@ -1,12 +1,25 @@
 'use client'
-import { countDecrement, countIncrement } from '@/lib/features/handleCounter';
-import React from 'react'
+import { countDecrement, countIncrement, setCount } from '@/lib/features/handleCounter';
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Counter = () => {
 
   const count = useSelector((data : any) => data.counterData.count);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const savedCount = localStorage.getItem("count");
+    if (count !== null) {
+        dispatch(setCount(savedCount));
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    localStorage.setItem("count", count.toString());
+  }, [count]);
+  
+  
 
   return (
     <div className='flex flex-col h-50 justify-center items-center space-y-6'>
